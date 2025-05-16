@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  hbase:
+    build: .
+    container_name: hbase_custom
+    ports:
+      - "16010:16010"  # Web UI
+      - "2181:2181"    # ZooKeeper
+      - "9090:9090"    # Thrift server
+    volumes:
+      - ./data.csv:/data.csv
+      - hbase_data:/opt/hbase/data
+    environment:
+      - HBASE_MANAGES_ZK=true
+    stdin_open: true
+    tty: true
+    deploy:
+      resources:
+        limits:
+          memory: 4g  # Limite de memória (só funciona em modo swarm)
+
+volumes:
+  hbase_data:
+
+
