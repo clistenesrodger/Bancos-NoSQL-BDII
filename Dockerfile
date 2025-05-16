@@ -1,5 +1,3 @@
-
-
 FROM ubuntu:20.04
 
 ENV DEBIAN_FRONTEND=noninteractive
@@ -18,11 +16,14 @@ RUN apt-get update && \
 RUN curl -L https://archive.apache.org/dist/hbase/${HBASE_VERSION}/hbase-${HBASE_VERSION}-bin.tar.gz | tar -xz -C /opt && \
     mv /opt/hbase-${HBASE_VERSION} /opt/hbase
 
+# Copiar o script de importação
+COPY import_csv.sh /import_csv.sh
+RUN chmod +x /import_csv.sh
+
 # Expor portas padrão
 EXPOSE 16010 2181 9090
 
-
-
-CMD ["bash", "-c", "/opt/hbase/bin/start-hbase.sh && tail -f /opt/hbase/logs/hbase--master-$(hostname).out"]
+# Inicializar HBase, importar CSV e manter o container rodando
+CMD bash -c "/opt/hbase/bin/start-hbase.sh && sleep 10 && bash /import_csv.sh && tail -f /opt/hbase/logs/hbase--master-$(hostname).out"
 
 
