@@ -59,3 +59,22 @@ Ao iniciar o ambiente com `docker-compose up --build`, o script `import_csv.sh` 
 
 O processo é totalmente automatizado: basta garantir que o arquivo `data.csv` esteja no diretório do projeto antes de subir o ambiente.  
 Após a inicialização, os dados já estarão disponíveis na tabela `vendas` do HBase.
+
+## Como verificar se a importação ocorreu
+
+Após subir o ambiente, siga os passos abaixo para conferir se os dados do `data.csv` foram importados corretamente para o HBase:
+
+1. **Acesse o terminal do container:**
+   ```sh
+   docker exec -it hbase_custom bash
+   ```
+
+2. No terminal do container, execute:
+   ```sh
+   hbase shell
+   ```
+
+3. Execute um scan na tabela vendas:
+   ```sh
+   scan 'vendas', {LIMIT => 5}
+   ```
