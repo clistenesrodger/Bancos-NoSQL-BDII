@@ -1,26 +1,41 @@
 version: '3.8'
 
 services:
-  hbase:
-    build: .
-    container_name: hbase_custom
+  zookeeper:
+    image: zookeeper:3.7
+    container_name: zk
     ports:
-      - "16010:16010"  # Web UI
-      - "2181:2181"    # ZooKeeper
-      - "9090:9090"    # Thrift server
+      - "2181:2181"
+
+  hbase-master:
+    build: .
+    container_name: hbase-master
+    environment:
+      - HBASE_MANAGES_ZK=false
+      - HBASE_ROLE=master
+    depends_on:
+      - zookeeper
+    ports:
+      - "16010:16010"
     volumes:
       - ./data.csv:/data.csv
-      - hbase_data:/opt/hbase/data
+      - hbase_master_data:/opt/hbase/data
+
+  hbase-regionserver:
+    build: .
+    container_name: hbase-regionserver
     environment:
-      - HBASE_MANAGES_ZK=true
-    stdin_open: true
-    tty: true
-    deploy:
-      resources:
-        limits:
-          memory: 4g  # Limite de memória (só funciona em modo swarm)
+      - HBASE_MANAGES_ZK=false
+      - HBASE_ROLE=regionserver
+    depends_on:
+      - zookeeper
+    ports:
+      - "16030:16030"
+    volumes:
+      - hbase_rs_data:/opt/hbase/data
 
 volumes:
-  hbase_data:
+  hbase_master_data:
+  hbase_rs_data:
 
 

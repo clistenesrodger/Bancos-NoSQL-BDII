@@ -24,6 +24,11 @@ RUN chmod +x /import_csv.sh
 EXPOSE 16010 2181 9090
 
 # Inicializar HBase, importar CSV e manter o container rodando
-CMD bash -c "/opt/hbase/bin/start-hbase.sh && sleep 10 && bash /import_csv.sh && tail -f /opt/hbase/logs/hbase--master-$(hostname).out"
+CMD bash -c "\
+  if [ \"$HBASE_ROLE\" = \"master\" ]; then \
+    /opt/hbase/bin/start-hbase.sh && sleep 10 && bash /import_csv.sh && tail -f /opt/hbase/logs/hbase--master-$(hostname).out; \
+  elif [ \"$HBASE_ROLE\" = \"regionserver\" ]; then \
+    /opt/hbase/bin/hbase-daemon.sh start regionserver && tail -f /opt/hbase/logs/hbase--regionserver-$(hostname).out; \
+  fi"
 
 
