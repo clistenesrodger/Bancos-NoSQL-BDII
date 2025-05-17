@@ -18,7 +18,9 @@ RUN curl -L https://archive.apache.org/dist/hbase/${HBASE_VERSION}/hbase-${HBASE
 
 # Copiar o script de importação
 COPY import_csv.sh /import_csv.sh
-RUN chmod +x /import_csv.sh
+
+# Converter finais de linha para Unix (LF)
+RUN apt-get update && apt-get install -y dos2unix && dos2unix /import_csv.sh && chmod +x /import_csv.sh
 
 # Expor portas padrão
 EXPOSE 16010 2181 9090
