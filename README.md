@@ -25,7 +25,7 @@ Este projeto configura um ambiente HBase usando Docker Compose para facilitar te
 
 1. Abra um terminal no container:
    ```sh
-   docker exec -it hbase_custom bash
+   docker exec -it hbase-master bash
    ```
 
 2. No terminal do container, execute:
@@ -66,7 +66,7 @@ Após subir o ambiente, siga os passos abaixo para conferir se os dados do `data
 
 1. **Acesse o terminal do container:**
    ```sh
-   docker exec -it hbase_custom bash
+   docker exec -it hbase-master bash
    ```
 
 2. No terminal do container, execute:
