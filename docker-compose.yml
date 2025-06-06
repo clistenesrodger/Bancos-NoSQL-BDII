@@ -6,36 +6,78 @@ services:
     container_name: zk
     ports:
       - "2181:2181"
+    networks:
+      - hbase-net
 
   hbase-master:
     build: .
     container_name: hbase-master
+    hostname: hbase-master
     environment:
+      - JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
       - HBASE_MANAGES_ZK=false
-      - HBASE_ROLE=master
+      - HBASE_ROLE=master 
     depends_on:
       - zookeeper
     ports:
       - "16010:16010"
     volumes:
       - ./data.csv:/data.csv
-      - hbase_master_data:/opt/hbase/data
+      - ./hbase-site.xml:/opt/hbase/conf/hbase-site.xml
+      - hbase-master-data:/opt/hbase-data
+    networks:
+      - hbase-net
 
-  hbase-regionserver:
+  hbase-regionserver1:
     build: .
-    container_name: hbase-regionserver
+    container_name: hbase-regionserver1
+    hostname: hbase-regionserver1
     environment:
+      - JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
       - HBASE_MANAGES_ZK=false
       - HBASE_ROLE=regionserver
     depends_on:
       - zookeeper
+      - hbase-master
     ports:
       - "16030:16030"
     volumes:
-      - hbase_rs_data:/opt/hbase/data
+      - ./hbase-site.xml:/opt/hbase/conf/hbase-site.xml
+      - hbase-rs1-data:/opt/hbase-data
+    networks:
+      - hbase-net
+
+  hbase-regionserver2:
+    build: .
+    container_name: hbase-regionserver2
+    hostname: hbase-regionserver2
+    environment:
+      - JAVA_HOME=/usr/lib/jvm/java-11-openjdk-amd64
+      - HBASE_MANAGES_ZK=false
+      - HBASE_ROLE=regionserver
+    depends_on:
+      - zookeeper
+      - hbase-master
+    ports:
+      - "16031:16030"
+    volumes:
+      - ./hbase-site.xml:/opt/hbase/conf/hbase-site.xml
+      - hbase-rs2-data:/opt/hbase-data
+    networks:
+      - hbase-net
+      
+networks:
+  hbase-net:
+    driver: bridge
 
 volumes:
-  hbase_master_data:
-  hbase_rs_data:
+  hbase-master-data:
+  hbase-rs1-data:
+  hbase-rs2-data:
+
+
+
+
+
 
 
