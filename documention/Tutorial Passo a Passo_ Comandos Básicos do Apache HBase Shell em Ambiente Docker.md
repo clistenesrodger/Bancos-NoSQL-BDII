@@ -1,7 +1,5 @@
 # Tutorial Passo a Passo: Comandos Básicos do Apache HBase Shell em Ambiente Docker
 
-Este tutorial foi adaptado para guiar você na execução de comandos comuns no shell do Apache HBase dentro de um ambiente Docker, utilizando a configuração fornecida pelo seu projeto. O shell HBase é uma interface de linha de comando interativa baseada em JRuby que permite interagir diretamente com o banco de dados HBase.
-
 ## Pré-requisitos
 
 Antes de começar, certifique-se de ter o Docker e o Docker Compose instalados em sua máquina. Além disso, você deve ter o projeto Docker do HBase configurado e em execução. Se ainda não o fez, siga os passos abaixo para iniciar o ambiente:
